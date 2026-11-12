@@ -45,8 +45,8 @@ If a command doesn't exist yet, or fails for a reason outside the slice, report 
 
 ## 5. Review and merge
 
-1. Open the PR and fill in every section of `.github/pull_request_template.md`. Leave "In your own words" for the human author to write.
-2. The author must be able to explain every line.
+1. Run the `defend-pr` skill with the human author. Continue only after a **ready** verdict.
+2. Open the PR and fill in every section of `.github/pull_request_template.md`. Leave "In your own words" for the human author to write.
 3. A separate agent or session that did not write the code does an AI review. Fix or answer every finding.
 4. A human reviews the PR, and a human merges it.
 

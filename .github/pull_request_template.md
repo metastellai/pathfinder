@@ -37,7 +37,7 @@ $ just accept   # only if runtime behaviour changed
 
 <!-- Which parts did an AI tool write or suggest? "None" is a fine answer. -->
 
-- [ ] I can explain every line in this diff.
+- [ ] I can explain every line in this diff (`defend-pr` verdict: ready).
 
 ## Checklist
 

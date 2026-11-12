@@ -100,7 +100,7 @@ pathfinder/
 ## How we work
 
 **Two quality bars**
-- **Durable code** (`packages/`, `contracts/`, `acceptance/`, `mappings/`) needs `mypy --strict`, unit tests, and a fixture for every format. Changing a schema needs a version bump.
+- **Durable code** (`packages/`, `contracts/`, `acceptance/`, `mappings/`, `templates/`) needs `mypy --strict`, unit tests, and a fixture for every format. Changing a schema needs a version bump.
 - **Application code** (`app/`) needs type checks and must keep the acceptance suite green. Keep it simple. No abstractions "for later".
 
 **Every PR**

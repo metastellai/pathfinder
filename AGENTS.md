@@ -25,7 +25,7 @@ If a command and the README disagree, fix one of them in the same PR.
 
 Where the code lives decides the bar it must meet.
 
-- **Durable code** (`packages/`, `contracts/`, `acceptance/`, `mappings/`) is built to outlast the application. It needs `mypy --strict`, unit tests, and a fixture for every format it handles. Any schema change needs a version bump.
+- **Durable code** (`packages/`, `contracts/`, `acceptance/`, `mappings/`, `templates/`) is built to outlast the application. It needs `mypy --strict`, unit tests, and a fixture for every format it handles. Any schema change needs a version bump.
 - **Application code** (`app/`) needs type checks and must keep `just accept` green. Write the simplest code that passes, and build only what a spec asks for.
 
 ## Process

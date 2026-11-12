@@ -8,7 +8,7 @@
 
 ## Quality bar
 
-- [ ] Durable (`packages/`, `contracts/`, `acceptance/`, `mappings/`): `mypy --strict`, unit tests, fixture for every format touched
+- [ ] Durable (`packages/`, `contracts/`, `acceptance/`, `mappings/`, `templates/`): `mypy --strict`, unit tests, fixture for every format touched
 - [ ] Application (`app/`): type checks, `just accept` green
 
 ## Verification

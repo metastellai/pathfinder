@@ -1,0 +1,37 @@
+name: Good first issue
+description: For maintainers. A small, well-scoped starter task with a mentor.
+title: "starter: "
+labels: ["good first issue"]
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Write this so a new teammate can finish it in one small PR without a design discussion. If the task needs a spec, use the Feature template instead.
+  - type: textarea
+    id: task
+    attributes:
+      label: Task
+      description: What to change, in two or three sentences.
+    validations:
+      required: true
+  - type: textarea
+    id: start-here
+    attributes:
+      label: Start here
+      description: The files or functions to read first, and an existing example to follow.
+    validations:
+      required: true
+  - type: textarea
+    id: done
+    attributes:
+      label: Done when
+      description: The observable result, and the command that proves it, for example `just test` passing a named new test.
+    validations:
+      required: true
+  - type: input
+    id: mentor
+    attributes:
+      label: Mentor
+      description: The GitHub handle of the person who answers questions and reviews the PR.
+    validations:
+      required: true

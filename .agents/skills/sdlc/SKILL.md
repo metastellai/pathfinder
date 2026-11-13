@@ -41,7 +41,7 @@ Order the slices so that `main` stays green after each one merges.
 
 If a command doesn't exist yet, or fails for a reason outside the slice, report exactly that. It counts as a result, not a pass.
 
-**Done when** every relevant command has passed and its output is in the PR.
+**Done when** every relevant command has either passed or been reported as missing, and its output is in the PR.
 
 ## 5. Review and merge
 

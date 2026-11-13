@@ -25,7 +25,9 @@ Ask about the hunks where a misunderstanding would cost the most: logic, error h
 - **Test**: which test fails if this line is removed. If no test would fail, ask why not.
 - **Bar**: which quality bar applies, and whether the change needs a schema version bump or a page in `docs/decisions/`.
 
-**Done when** every file containing logic has at least one question.
+Rank the candidate hunks by risk and ask about the riskiest first. When the cap leaves files with logic unquestioned, note them for the verdict.
+
+**Done when** the questions cover the riskiest hunks, and every file with logic either has a question or is on the unquestioned list.
 
 ## 3. Quiz
 
@@ -45,6 +47,8 @@ Give the verdict first:
 
 - **Ready**: every answer is solid.
 - **Not ready**: list each shaky or missing answer, with its `file:line`.
+
+With either verdict, list the files with logic that got no question, so the reviewer knows where to look hardest.
 
 Then go through each answer that wasn't solid. Explain the correct answer and point to the code or test that shows it. For each gap, recommend one next step:
 

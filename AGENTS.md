@@ -17,6 +17,7 @@ just test       # unit tests (packages/) + type checks
 just accept     # acceptance suite against the running system
 just fixtures   # sample files for every supported format
 just contracts  # regenerate the openapi.json snapshot
+just package    # build the offline installer
 ```
 
 If a command and the README disagree, fix one of them in the same PR.
@@ -47,12 +48,13 @@ Skills live in `.agents/skills/<name>/SKILL.md`.
   - Needs sign-off: any copyleft license, including LGPL.
   - Never added: AGPL or non-commercial dependencies, such as Ultralytics YOLO, MinIO or Garage.
 - **Changes to** `contracts/` schemas, the on-disk data layout, `mappings/`, or Label Studio templates.
+- **Changes to** quality gates: the quality bars above, lint, type or test configuration, and acceptance criteria.
 - **Changes to** CI, `deploy/`, secrets, or the offline installer.
 - **Anything that would modify Label Studio itself.** It ships unmodified, so integrate with it through its API and templates.
 
 **Hard rules**
 
-- Regenerate `contracts/openapi.json` with `just contracts`. Only edit it by hand if it's broken.
+- Regenerate generated files with the command that produces them, such as `just contracts` for `contracts/openapi.json`. Only edit one by hand if it's broken.
 - Keep secrets out of commits.
 - A human merges every PR, and only after explicit approval. Never force-push.
 - Report file paths, API behaviour and test results only from what you actually observed.

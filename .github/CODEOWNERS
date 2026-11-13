@@ -20,3 +20,20 @@
 /.claude/               @metastellai/pathfinder-leads
 /.github/               @metastellai/pathfinder-leads
 /deploy/                @metastellai/pathfinder-leads
+
+# Scope, architecture and the command contract.
+/README.md              @metastellai/pathfinder-leads
+/ARCHITECTURE.md        @metastellai/pathfinder-leads
+/justfile               @metastellai/pathfinder-leads
+
+# Specs and decisions shape the code, so a senior reviewer signs them off.
+/specs/                 @metastellai/pathfinder-core
+/docs/decisions/        @metastellai/pathfinder-core
+
+# Dependency manifests anywhere in the tree. Licence sign-off (AGENTS.md) happens here,
+# so these lines come last and override the durable-code lines above.
+pyproject.toml          @metastellai/pathfinder-leads
+uv.lock                 @metastellai/pathfinder-leads
+package.json            @metastellai/pathfinder-leads
+package-lock.json       @metastellai/pathfinder-leads
+pnpm-lock.yaml          @metastellai/pathfinder-leads

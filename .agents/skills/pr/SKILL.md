@@ -29,7 +29,7 @@ Fill in `.github/pull_request_template.md` with facts you checked yourself, then
 
 If a command is missing or fails, record exactly that. Fix a failure or report it before you go further.
 
-**Done when** every relevant command has output you captured.
+**Done when** every relevant command has either passed or been recorded as missing, and you captured its output.
 
 ## 4. Write the description
 

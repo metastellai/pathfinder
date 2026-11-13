@@ -31,7 +31,7 @@ Facts are your job. Look them up yourself in the repo, the docs or your tools, u
 
 Cover every branch that applies to the subject:
 
-- **Scope**: Which item in `acceptance/checklist.md` does this serve, and is it inside the fixed scope?
+- **Scope**: Which item in `acceptance/checklist.md` does this serve, and is it inside the fixed scope? Until the checklist exists, use the module table in `README.md`.
 - **Quality bar**: Does the code land in durable code or application code? Does it change a schema in `contracts/` or the on-disk data layout?
 - **Formats**: Which data types or formats does it touch, and which fixtures prove they work?
 - **Dependencies**: Does it add anything new? What license does it carry?

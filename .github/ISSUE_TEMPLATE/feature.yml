@@ -11,7 +11,7 @@ body:
     id: acceptance-item
     attributes:
       label: Acceptance checklist item
-      description: The entry in `acceptance/checklist.md` this delivers.
+      description: The entry in `acceptance/checklist.md` this delivers. Until that file exists, name the module from the table in `README.md`.
     validations:
       required: true
   - type: textarea

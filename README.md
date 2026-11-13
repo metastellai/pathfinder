@@ -24,7 +24,7 @@ NASA's Mars Pathfinder was a compact, low-cost mission that proved the route for
 | 6 | Import, export, conversion | 11+ formats, including JSON, COCO, YOLO, LeRobot, HDF5 and MCAP |
 | ▲7 | Training and edge inference | Fine-tuning jobs on dataset versions, with deployment to Jetson edge devices |
 
-The scope is fixed. The acceptance checklist is [`acceptance/checklist.md`](acceptance/checklist.md).
+The scope is fixed. The acceptance checklist will be [`acceptance/checklist.md`](acceptance/checklist.md) (not written yet; until then, this table is the scope).
 
 ---
 
@@ -34,7 +34,7 @@ The scope is fixed. The acceptance checklist is [`acceptance/checklist.md`](acce
 - **Application**: a FastAPI server and worker, a React web UI, Label Studio (unmodified), training runners, and an Edge Agent. These are kept small and simple.
 - **One host**: PostgreSQL handles both metadata and the job queue, and files live on local disk. Everything installs offline.
 
-Full details are in [ARCHITECTURE.md](ARCHITECTURE.md).
+Full details will be in [ARCHITECTURE.md](ARCHITECTURE.md) (not written yet).
 
 ---
 

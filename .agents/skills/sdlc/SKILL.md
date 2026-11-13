@@ -47,7 +47,7 @@ If a command doesn't exist yet, or fails for a reason outside the slice, report 
 
 1. Run the `defend-pr` skill with the human author. Continue only after a **ready** verdict.
 2. Open the PR with the `pr` skill.
-3. A separate agent or session that did not write the code does an AI review. Fix or answer every finding.
+3. A separate agent or session that did not write the code does an AI review. Fix or answer every finding. If a fix changes the diff, run `defend-pr` again on the changed hunks before the human review.
 4. A human reviews the PR, and a human merges it.
 
 **Done when** a human has approved and merged the PR. Then return to stage 3 for the next slice.

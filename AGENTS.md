@@ -2,7 +2,7 @@
 
 Pathfinder is a single-host data platform for robot and multimodal data. It covers ingest, quality checks, labeling, versioning, training and deployment to Jetson edge devices. `README.md` defines the scope, which is fixed, and `acceptance/checklist.md` defines what "done" means.
 
-**Status: pre-alpha.** The scaffold (`justfile`, `packages/`, `app/` and the rest) doesn't exist yet. If you run a command that is missing, report it as missing.
+**Status: pre-alpha.** The scaffold (`justfile`, `packages/`, `app/` and the rest) doesn't exist yet. Nor do `acceptance/checklist.md` and `ARCHITECTURE.md`. Until they do, the "What it does" table and "Architecture at a glance" in `README.md` stand in for them. If you run a command that is missing, report it as missing.
 
 ## Commands
 
@@ -15,7 +15,7 @@ just dev        # server, worker, web UI, Label Studio
 just lint       # ruff, mypy, eslint, tsc
 just test       # unit tests (packages/) + type checks
 just accept     # acceptance suite against the running system
-just fixtures   # sample files for every supported format
+just fixtures   # download sample files for every supported format
 just contracts  # regenerate the openapi.json snapshot
 just package    # build the offline installer
 ```
@@ -45,7 +45,7 @@ Skills live in `.agents/skills/<name>/SKILL.md`.
 
 - **New dependencies.**
   - Allowed without sign-off: permissive licenses (MIT, BSD, Apache-2.0, PostgreSQL).
-  - Needs sign-off: any copyleft license, including LGPL.
+  - Needs sign-off: any copyleft license, including LGPL, and any proprietary or custom license, such as NVIDIA SDK licenses or model terms of use.
   - Never added: AGPL or non-commercial dependencies, such as Ultralytics YOLO, MinIO or Garage.
 - **Changes to** `contracts/` schemas, the on-disk data layout, `mappings/`, or Label Studio templates.
 - **Changes to** quality gates: the quality bars above, lint, type or test configuration, and acceptance criteria.
@@ -63,4 +63,4 @@ Skills live in `.agents/skills/<name>/SKILL.md`.
 
 - Follow the existing patterns.
 - Write comments that explain *why*.
-- Everything must install offline. Fetch data at runtime only when the user configures a source.
+- Everything must install offline. Fetch data at runtime only when the user configures a source. Development tools such as `just fixtures` may download.

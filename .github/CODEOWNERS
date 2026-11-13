@@ -37,3 +37,15 @@ uv.lock                 @metastellai/pathfinder-leads
 package.json            @metastellai/pathfinder-leads
 package-lock.json       @metastellai/pathfinder-leads
 pnpm-lock.yaml          @metastellai/pathfinder-leads
+
+# Quality gates: changing them needs sign-off (AGENTS.md, "Ask first").
+.pre-commit-config.yaml @metastellai/pathfinder-leads
+ruff.toml               @metastellai/pathfinder-leads
+.ruff.toml              @metastellai/pathfinder-leads
+mypy.ini                @metastellai/pathfinder-leads
+.mypy.ini               @metastellai/pathfinder-leads
+pytest.ini              @metastellai/pathfinder-leads
+setup.cfg               @metastellai/pathfinder-leads
+tsconfig*.json          @metastellai/pathfinder-leads
+eslint.config.*         @metastellai/pathfinder-leads
+.eslintrc*              @metastellai/pathfinder-leads

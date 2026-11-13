@@ -4,19 +4,14 @@
 # allows a hand edit when the file is broken, so ask a human instead of refusing outright.
 set -Eeuo pipefail
 trap 'echo "guard-edit.sh failed unexpectedly, so the edit was blocked. Ask the user to check the hook." >&2; exit 2' ERR
-command -v jq >/dev/null 2>&1 || {
-  echo "guard-edit.sh needs jq. Ask the user to install it (brew install jq, or apt install jq)." >&2
-  exit 2
-}
 
-file=$(jq -r '.tool_input.file_path // .tool_input.notebook_path // empty')
+input=$(cat)
+if command -v jq >/dev/null 2>&1; then
+  file=$(jq -r '.tool_input.file_path // .tool_input.notebook_path // empty' <<<"$input")
+  case "$file" in */contracts/openapi.json | contracts/openapi.json) ;; *) exit 0 ;; esac
+else
+  # No jq: a plain match on the path, so other edits still work.
+  [[ $input == *contracts/openapi.json* ]] || exit 0
+fi
 
-case "$file" in
-  */contracts/openapi.json | contracts/openapi.json)
-    jq -n '{hookSpecificOutput: {
-      hookEventName: "PreToolUse",
-      permissionDecision: "ask",
-      permissionDecisionReason: "contracts/openapi.json is generated. Change the API code and run `just contracts`. Edit it by hand only if it is broken (AGENTS.md)."
-    }}'
-    ;;
-esac
+printf '%s\n' '{"hookSpecificOutput":{"hookEventName":"PreToolUse","permissionDecision":"ask","permissionDecisionReason":"contracts/openapi.json is generated. Change the API code and run `just contracts`. Edit it by hand only if it is broken (AGENTS.md)."}}'

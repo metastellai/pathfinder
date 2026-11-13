@@ -47,7 +47,7 @@ Full details will be in [ARCHITECTURE.md](ARCHITECTURE.md) (not written yet).
 - Node.js 20+
 - PostgreSQL 16
 - [just](https://github.com/casey/just)
-- [jq](https://jqlang.org), used by the Claude Code hooks in `.claude/hooks/`
+- [jq](https://jqlang.org), recommended for the Claude Code hooks in `.claude/hooks/`
 - An NVIDIA GPU, for pre-labeling and training only
 
 ### First run

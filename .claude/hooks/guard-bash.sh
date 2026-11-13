@@ -1,54 +1,56 @@
 #!/usr/bin/env bash
-# PreToolUse (Bash): every change reaches main through a reviewed PR (AGENTS.md), and
-# contracts/openapi.json is generated. So:
-#   - deny force-pushes and pushes to main
-#   - deny commit, merge, cherry-pick, revert, am and rebase while on main
-#   - ask before a shell command writes contracts/openapi.json
-# This is a guardrail for honest mistakes, not a security boundary: commands hidden
-# inside `sh -c '...'`, eval or a script are not parsed. Branch protection on main is
-# the real control.
+# PreToolUse (Bash): a cheap guardrail for honest mistakes, not a security boundary.
+# Every change reaches main through a reviewed PR, and contracts/openapi.json is
+# generated (AGENTS.md). So this hook:
+#   - denies force-pushes, and pushes that name main
+#   - denies commit, merge, cherry-pick, revert, am, rebase, reset, pull and push
+#     while the session's own directory is on main
+#   - asks before a shell command writes contracts/openapi.json
+# It reads command text, so it can't see what a command does at runtime: a chain that
+# switches to main first, `cd` or `git -C` into another repo, `sh -c`, eval and scripts
+# all get past it. Branch protection on main is the real control, and git's own
+# pre-commit and pre-push hooks will cover the rest once the pre-commit setup lands.
 set -Eeuo pipefail
 # Fail closed: exit 2 blocks the tool call, any other error would let it through.
 trap 'echo "guard-bash.sh failed unexpectedly, so the command was blocked. Ask the user to check the hook." >&2; exit 2' ERR
 
 input=$(cat)
-if ! command -v jq >/dev/null 2>&1; then
-  # Without jq the command can't be parsed. Block only what this hook guards, so that
-  # everything else, including installing jq, still works.
-  if [[ $input == *git* || $input == *openapi.json* ]]; then
-    echo "guard-bash.sh needs jq to check git and openapi.json commands. Ask the user to install it (brew install jq, or apt install jq)." >&2
-    exit 2
-  fi
-  exit 0
+if command -v jq >/dev/null 2>&1; then
+  cmd=$(jq -r '.tool_input.command // empty' <<<"$input")
+  dir=$(jq -r '.cwd // empty' <<<"$input")
+else
+  # No jq: pull out the command string itself, so nothing else in the input (such as a
+  # path that contains "git") can trigger a check.
+  re='"command"[[:space:]]*:[[:space:]]*"(([^"\\]|\\.)*)"'
+  if [[ $input =~ $re ]]; then cmd=${BASH_REMATCH[1]}; else cmd=""; fi
+  cmd=${cmd//\\n/$'\n'}
+  cmd=${cmd//\\\"/\"}
+  dir=""
 fi
-
-cmd=$(jq -r '.tool_input.command // empty' <<<"$input")
-dir=$(jq -r '.cwd // empty' <<<"$input")
 dir=${dir:-$PWD}
 
-decide() { # decide <deny|ask> <reason>
-  jq -n --arg d "$1" --arg r "$2" '{hookSpecificOutput: {
-    hookEventName: "PreToolUse", permissionDecision: $d, permissionDecisionReason: $r
-  }}'
+decide() { # decide <deny|ask> <reason>; reasons contain no quotes or backslashes
+  printf '{"hookSpecificOutput":{"hookEventName":"PreToolUse","permissionDecision":"%s","permissionDecisionReason":"%s"}}\n' "$1" "$2"
   exit 0
 }
 FORCE="Force-pushing is not allowed (AGENTS.md). Push normally, or ask a human if history really has to be rewritten."
 TO_MAIN="Changes reach main only through a reviewed PR (AGENTS.md). Push a feature branch instead."
 OPENAPI="contracts/openapi.json is generated. Change the API code and run \`just contracts\`. Edit it by hand only if it is broken (AGENTS.md)."
 
+on_main=0
+[ "$(git -C "$dir" branch --show-current 2>/dev/null || true)" = main ] && on_main=1
+
 # Strip quotes and the brackets of ( ... ) and { ...; } groups from a word.
 clean() { local t=$1; t=${t#\(}; t=${t#\(}; t=${t%\)}; t=${t%\)}; t=${t#[\"\']}; printf '%s' "${t%[\"\']}"; }
 is_openapi() { [[ $1 == contracts/openapi.json || $1 == */contracts/openapi.json ]]; }
-branch_of() { git -C "$1" branch --show-current 2>/dev/null || true; }
-resolve() { case $1 in /*) printf '%s' "$1" ;; "~"*) printf '%s' "$HOME${1#\~}" ;; *) printf '%s' "$dir/$1" ;; esac; }
 
-# check_openapi <word>...: ask when a simple command would write contracts/openapi.json.
-check_openapi() {
+check_openapi() { # check_openapi <word>...: ask if this simple command writes the file
   local prog=${1##*/} w prev="" last="" inplace=0 hit=0
   for w in "$@"; do
     case $prev in -o | --out | --output) is_openapi "$w" && decide ask "$OPENAPI" ;; esac
-    [[ $w == --out*=* || $w == --output=* ]] && is_openapi "${w#*=}" && decide ask "$OPENAPI"
-    [[ $w == -i* || $w == --in-place* ]] && inplace=1
+    [[ $w == --out*=* ]] && is_openapi "${w#*=}" && decide ask "$OPENAPI"
+    # -i, -i.bak, -pi, -ni, --in-place
+    [[ $w =~ ^-[A-Za-z]*i || $w == --in-place* ]] && inplace=1
     is_openapi "$w" && hit=1
     prev=$w; last=$w
   done
@@ -63,59 +65,47 @@ check_openapi() {
 }
 
 check_git() { # check_git <word>...  (the words after "git")
-  local repo=$dir sub=""
+  local sub="" a
   while [ $# -gt 0 ]; do
     case $1 in
-      -C) repo=$(resolve "${2:-.}"); shift 2 ;;
-      -c | --git-dir | --work-tree | --namespace) shift 2 ;;
+      -C | -c | --git-dir | --work-tree | --namespace) shift 2 ;;
       -*) shift ;;
       *) sub=$1; shift; break ;;
     esac
   done
   case $sub in
     push)
-      local a dst refspecs=0
       for a in "$@"; do
         case $a in
           --force | --force=* | --force-with-lease | --force-with-lease=* | --force-if-includes) decide deny "$FORCE" ;;
           --all | --mirror | --branches) decide deny "$a pushes every branch, including main. $TO_MAIN" ;;
           --*) ;;
           -*f*) decide deny "$FORCE" ;;
-          -*) ;;
           +*) decide deny "A +refspec is a force-push, which is not allowed (AGENTS.md)." ;;
-          *)
-            refspecs=$((refspecs + 1))
-            [ $refspecs -gt 1 ] || continue # the first positional argument is the remote
-            dst=${a##*:}
-            case $dst in
-              main | refs/heads/main) decide deny "$TO_MAIN" ;;
-              HEAD | @) [ "$(branch_of "$repo")" = main ] && decide deny "$TO_MAIN" ;;
-            esac ;;
+          main | *:main | refs/heads/main | *:refs/heads/main) decide deny "$TO_MAIN" ;;
         esac
       done
-      # No refspec pushes the current branch.
-      if [ $refspecs -le 1 ] && [ "$(branch_of "$repo")" = main ]; then decide deny "You are on main. $TO_MAIN"; fi ;;
-    commit | merge | cherry-pick | revert | am | rebase)
+      [ $on_main -eq 0 ] || decide deny "You are on main. Create a branch first in its own command (git switch -c <name>), then push that." ;;
+    commit | merge | cherry-pick | revert | am | rebase | reset | pull)
       case " $* " in *" --abort "* | *" --quit "* | *" --skip "*) return 0 ;; esac
-      if [ "$(branch_of "$repo")" = main ]; then
-        decide deny "git $sub would change main in $repo. Create a branch first in its own command (git switch -c <name>), then work there."
-      fi ;;
+      [ $on_main -eq 0 ] || decide deny "git $sub would change main. Create a branch first in its own command (git switch -c <name>), then work there." ;;
   esac
   return 0
 }
 
-# Split into simple commands on ; & | and newlines. Quoting is not understood, so a
-# separator inside a quoted string can split it; that only ever adds checks.
+# Split into simple commands on ; & | and newlines. `>|` is a redirection, so turn it
+# into `>` first. Quoting is not understood, so a separator inside a quoted string can
+# split it; that only ever adds checks.
 while IFS= read -r segment; do
+  if grep -Eq '>[[:space:]]*["'\'']?([^[:space:]]*/)?contracts/openapi\.json["'\'']?([[:space:]]|$)' <<<"$segment"; then
+    decide ask "$OPENAPI"
+  fi
   read -ra raw <<<"$segment" || true
   words=()
   for w in ${raw[@]+"${raw[@]}"}; do
     w=$(clean "$w")
     [ -n "$w" ] && words+=("$w")
   done
-  [ ${#words[@]} -gt 0 ] || continue
-  # Redirections are where most hand edits happen: > file, >> file, >file.
-  if grep -Eq '>[[:space:]]*["'\'']?([^[:space:]]*/)?contracts/openapi\.json' <<<"$segment"; then decide ask "$OPENAPI"; fi
   i=0
   # Skip env assignments, shell keywords and wrappers that run their arguments.
   while [ $i -lt ${#words[@]} ] && [[ ${words[$i]} =~ ^[A-Za-z_][A-Za-z0-9_]*= || ${words[$i]} =~ ^(env|command|exec|time|nohup|sudo|xargs|\{|\}|!|if|then|else|elif|do|while|until)$ ]]; do
@@ -124,9 +114,6 @@ while IFS= read -r segment; do
   [ $i -lt ${#words[@]} ] || continue
   rest=("${words[@]:$i}")
   check_openapi "${rest[@]}"
-  case ${rest[0]##*/} in
-    cd) dir=$(resolve "${rest[1]:-$HOME}") ;; # follow `cd x && git ...` to the right repo
-    git) if [ ${#rest[@]} -gt 1 ]; then check_git "${rest[@]:1}"; fi ;;
-  esac
-done < <(tr ';&|' '\n\n\n' <<<"$cmd")
+  if [ "${rest[0]##*/}" = git ] && [ ${#rest[@]} -gt 1 ]; then check_git "${rest[@]:1}"; fi
+done < <(sed 's/>|/>/g' <<<"$cmd" | tr ';&|' '\n\n\n')
 exit 0

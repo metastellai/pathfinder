@@ -4,48 +4,48 @@
 
 # Everything not matched below, including app/. The maintainers team includes the
 # new grads, so they can approve each other's application PRs.
-*                       @metastellai/pathfinder-maintainers
+*                       @metastellai/contributor
 
 # Durable code: built to outlast the application, so a senior reviewer is required.
-/packages/              @metastellai/pathfinder-core
-/contracts/             @metastellai/pathfinder-core
-/acceptance/            @metastellai/pathfinder-core
-/mappings/              @metastellai/pathfinder-core
-/templates/             @metastellai/pathfinder-core
+/packages/              @metastellai/reviewer
+/contracts/             @metastellai/reviewer
+/acceptance/            @metastellai/reviewer
+/mappings/              @metastellai/reviewer
+/templates/             @metastellai/reviewer
 
 # Process, agent rules, CI and deployment.
-/AGENTS.md              @metastellai/pathfinder-leads
-/CLAUDE.md              @metastellai/pathfinder-leads
-/.agents/               @metastellai/pathfinder-leads
-/.claude/               @metastellai/pathfinder-leads
-/.github/               @metastellai/pathfinder-leads
-/deploy/                @metastellai/pathfinder-leads
+/AGENTS.md              @metastellai/leader
+/CLAUDE.md              @metastellai/leader
+/.agents/               @metastellai/leader
+/.claude/               @metastellai/leader
+/.github/               @metastellai/leader
+/deploy/                @metastellai/leader
 
 # Scope, architecture and the command contract.
-/README.md              @metastellai/pathfinder-leads
-/ARCHITECTURE.md        @metastellai/pathfinder-leads
-/justfile               @metastellai/pathfinder-leads
+/README.md              @metastellai/leader
+/ARCHITECTURE.md        @metastellai/leader
+/justfile               @metastellai/leader
 
 # Specs and decisions shape the code, so a senior reviewer signs them off.
-/specs/                 @metastellai/pathfinder-core
-/docs/decisions/        @metastellai/pathfinder-core
+/specs/                 @metastellai/reviewer
+/docs/decisions/        @metastellai/reviewer
 
 # Dependency manifests anywhere in the tree. Licence sign-off (AGENTS.md) happens here,
 # so these lines come last and override the durable-code lines above.
-pyproject.toml          @metastellai/pathfinder-leads
-uv.lock                 @metastellai/pathfinder-leads
-package.json            @metastellai/pathfinder-leads
-package-lock.json       @metastellai/pathfinder-leads
-pnpm-lock.yaml          @metastellai/pathfinder-leads
+pyproject.toml          @metastellai/leader
+uv.lock                 @metastellai/leader
+package.json            @metastellai/leader
+package-lock.json       @metastellai/leader
+pnpm-lock.yaml          @metastellai/leader
 
 # Quality gates: changing them needs sign-off (AGENTS.md, "Ask first").
-.pre-commit-config.yaml @metastellai/pathfinder-leads
-ruff.toml               @metastellai/pathfinder-leads
-.ruff.toml              @metastellai/pathfinder-leads
-mypy.ini                @metastellai/pathfinder-leads
-.mypy.ini               @metastellai/pathfinder-leads
-pytest.ini              @metastellai/pathfinder-leads
-setup.cfg               @metastellai/pathfinder-leads
-tsconfig*.json          @metastellai/pathfinder-leads
-eslint.config.*         @metastellai/pathfinder-leads
-.eslintrc*              @metastellai/pathfinder-leads
+.pre-commit-config.yaml @metastellai/leader
+ruff.toml               @metastellai/leader
+.ruff.toml              @metastellai/leader
+mypy.ini                @metastellai/leader
+.mypy.ini               @metastellai/leader
+pytest.ini              @metastellai/leader
+setup.cfg               @metastellai/leader
+tsconfig*.json          @metastellai/leader
+eslint.config.*         @metastellai/leader
+.eslintrc*              @metastellai/leader

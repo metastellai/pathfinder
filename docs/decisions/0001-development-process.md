@@ -11,7 +11,7 @@ Pathfinder is pre-alpha and is built by a small team, most of them new graduates
 - Every non-trivial change follows the `sdlc` skill: spec, plan, slice, verify, review. Specs go in `specs/`, and decisions go in `docs/decisions/`.
 - There are two quality bars. Durable code (`packages/`, `contracts/`, `acceptance/`, `mappings/`, `templates/`) needs `mypy --strict`, unit tests and fixtures. Application code (`app/`) needs type checks and a green `just accept`.
 - Before a PR opens, and again after any review fix changes the diff, the author passes `defend-pr`, a quiz on their own diff. They also write the "In your own words" section of the PR template without AI.
-- `CODEOWNERS` routes review by risk. Maintainers, including new grads, review application code. `pathfinder-core` reviews durable code, specs and decisions. `pathfinder-leads` reviews process, CI, deployment, scope and dependency manifests.
+- `CODEOWNERS` routes review by risk, using the existing org teams. `contributor`, which includes the new grads, reviews application code. `reviewer` reviews durable code, specs and decisions. Process, CI, deployment, scope, dependency manifests and quality-gate config need `leader` or `reviewer`, so the one leader is never a bottleneck.
 - Three layers protect `main`, from strongest to weakest:
   1. **Branch protection on GitHub** is the real control.
   2. **Git's `pre-commit` and `pre-push` hooks** will check the real branch and refspecs for every tool. They come with the pre-commit setup, which isn't built yet.

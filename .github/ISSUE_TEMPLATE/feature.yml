@@ -1,0 +1,47 @@
+name: Feature
+description: New behaviour that delivers an item on the acceptance checklist.
+title: "feat: "
+labels: ["enhancement"]
+body:
+  - type: markdown
+    attributes:
+      value: |
+        The scope is fixed by `README.md` and `acceptance/checklist.md`. Work starts once a spec in `specs/` is linked below. The assignee writes it by following the `sdlc` skill.
+  - type: input
+    id: acceptance-item
+    attributes:
+      label: Acceptance checklist item
+      description: The entry in `acceptance/checklist.md` this delivers. Until that file exists, name the module from the table in `README.md`.
+    validations:
+      required: true
+  - type: textarea
+    id: goal
+    attributes:
+      label: Goal
+      description: What a user can do once this is done, and why it matters.
+    validations:
+      required: true
+  - type: dropdown
+    id: quality-bar
+    attributes:
+      label: Quality bar
+      description: Where the code is likely to land. See "Quality bars" in `AGENTS.md`.
+      options:
+        - Durable (packages/, contracts/, acceptance/, mappings/, templates/)
+        - Application (app/)
+        - Both
+        - Not sure
+    validations:
+      required: true
+  - type: input
+    id: spec
+    attributes:
+      label: Spec
+      description: Link to `specs/NNNN-short-title.md`. Leave empty when filing. The assignee adds it before writing code.
+  - type: checkboxes
+    id: scope
+    attributes:
+      label: Scope
+      options:
+        - label: This is inside the fixed scope in `README.md`.
+          required: true

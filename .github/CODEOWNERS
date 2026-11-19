@@ -1,0 +1,53 @@
+# Code owners for Pathfinder. When several lines match, the last one wins.
+# Enforced by the ruleset on main ("Require review from Code Owners"). Where a line lists
+# several teams, one approval from any of them is enough. Every team here needs write
+# access to the repo, or GitHub skips its lines.
+
+# Everything not matched below, including app/. The contributor team includes the
+# new grads, so they can approve each other's application PRs.
+*                       @metastellai/contributor
+
+# Durable code: built to outlast the application, so a senior reviewer is required.
+/packages/              @metastellai/reviewer
+/contracts/             @metastellai/reviewer
+/acceptance/            @metastellai/reviewer
+/mappings/              @metastellai/reviewer
+/templates/             @metastellai/reviewer
+
+# Process, agent rules, CI and deployment. Leader or reviewer, so a single leader is
+# never a bottleneck.
+/AGENTS.md              @metastellai/leader @metastellai/reviewer
+/CLAUDE.md              @metastellai/leader @metastellai/reviewer
+/.agents/               @metastellai/leader @metastellai/reviewer
+/.claude/               @metastellai/leader @metastellai/reviewer
+/.github/               @metastellai/leader @metastellai/reviewer
+/deploy/                @metastellai/leader @metastellai/reviewer
+
+# Scope, architecture and the command contract.
+/README.md              @metastellai/leader @metastellai/reviewer
+/ARCHITECTURE.md        @metastellai/leader @metastellai/reviewer
+/justfile               @metastellai/leader @metastellai/reviewer
+
+# Specs and decisions shape the code, so a senior reviewer signs them off.
+/specs/                 @metastellai/reviewer
+/docs/decisions/        @metastellai/reviewer
+
+# Dependency manifests anywhere in the tree. Licence sign-off (AGENTS.md) happens here,
+# so these lines come last and override the durable-code lines above.
+pyproject.toml          @metastellai/leader @metastellai/reviewer
+uv.lock                 @metastellai/leader @metastellai/reviewer
+package.json            @metastellai/leader @metastellai/reviewer
+package-lock.json       @metastellai/leader @metastellai/reviewer
+pnpm-lock.yaml          @metastellai/leader @metastellai/reviewer
+
+# Quality gates: changing them needs sign-off (AGENTS.md, "Ask first").
+.pre-commit-config.yaml @metastellai/leader @metastellai/reviewer
+ruff.toml               @metastellai/leader @metastellai/reviewer
+.ruff.toml              @metastellai/leader @metastellai/reviewer
+mypy.ini                @metastellai/leader @metastellai/reviewer
+.mypy.ini               @metastellai/leader @metastellai/reviewer
+pytest.ini              @metastellai/leader @metastellai/reviewer
+setup.cfg               @metastellai/leader @metastellai/reviewer
+tsconfig*.json          @metastellai/leader @metastellai/reviewer
+eslint.config.*         @metastellai/leader @metastellai/reviewer
+.eslintrc*              @metastellai/leader @metastellai/reviewer

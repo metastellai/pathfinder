@@ -1,0 +1,70 @@
+name: Bug report
+description: Something that worked, or should work, behaves wrongly.
+title: "bug: "
+labels: ["bug"]
+body:
+  - type: textarea
+    id: what-happened
+    attributes:
+      label: What happened
+      description: The actual behaviour, including the exact error text.
+    validations:
+      required: true
+  - type: textarea
+    id: expected
+    attributes:
+      label: What you expected
+    validations:
+      required: true
+  - type: textarea
+    id: repro
+    attributes:
+      label: Steps to reproduce
+      description: The smallest set of steps that shows the bug. Include the input file or fixture if one is needed.
+      placeholder: |
+        1. just dev
+        2. Import fixtures/... as ...
+        3. ...
+    validations:
+      required: true
+  - type: dropdown
+    id: area
+    attributes:
+      label: Module
+      options:
+        - 1 Collection and ingest
+        - 2 Quality checks and tasks
+        - 3 Storage and management
+        - 4 Labeling and review
+        - 5 Label templates
+        - 6 Import, export, conversion
+        - 7 Training and edge inference
+        - Installer or deployment
+        - Not sure
+    validations:
+      required: true
+  - type: dropdown
+    id: environment
+    attributes:
+      label: Environment
+      options:
+        - Ubuntu 22.04
+        - Ubuntu 24.04
+        - macOS
+        - Jetson
+        - Other
+    validations:
+      required: true
+  - type: input
+    id: version
+    attributes:
+      label: Commit or version
+      description: Output of `git rev-parse --short HEAD`, or the installer version.
+    validations:
+      required: true
+  - type: textarea
+    id: logs
+    attributes:
+      label: Logs
+      description: Relevant log lines. They are formatted as code automatically.
+      render: shell
